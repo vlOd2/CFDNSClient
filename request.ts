@@ -3,9 +3,9 @@ import { API_BASE_URL } from "./config.ts";
 
 export async function handleResponse<T extends CFResponse>(promise: Promise<Response>): Promise<T> {
     const response = await promise;
-    if (!response.ok) {
-        throw new Error(`Response code does not indicate success: ${response.status}`);
-    }
+    // if (!response.ok) {
+    //     throw new Error(`Response code does not indicate success: ${response.status}`);
+    // }
     return (await response.json()) as T;
 }
 
