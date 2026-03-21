@@ -1,0 +1,15 @@
+{
+    "tasks": {
+        "dev": "deno run --watch --allow-net --allow-read --allow-write main.ts",
+        "run": "deno run --allow-net --allow-read --allow-write main.ts"
+    },
+    "imports": {
+        "@podhmo/with-help": "jsr:@podhmo/with-help@^0.5.3",
+        "@std/cli": "jsr:@std/cli@^1.0.28"
+    },
+    "lint": {
+        "rules": {
+            "exclude": ["no-explicit-any"]
+        }
+    }
+}
