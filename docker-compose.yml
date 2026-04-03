@@ -1,0 +1,9 @@
+services:
+  cfdnsclient:
+    build:
+      context: .
+    volumes:
+      - cfdnsclient_config:/app
+
+volumes:
+  cfdnsclient_config:

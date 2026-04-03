@@ -1,0 +1,13 @@
+.git
+.gitignore
+Dockerfile
+README.md
+*.log
+_build/
+config.json
+bin/
+node_modules/
+LICENSE.txt
+.prettierignore
+.prettierrc
+.vscode/
