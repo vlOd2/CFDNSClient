@@ -48,7 +48,7 @@ export async function getZoneID(apiKey: string, zone: ConfigZone): Promise<strin
     ).result[0].id;
 }
 
-export async function getZoneRecordsInfo(apiKey: string, zoneID: string): Promise<CFRecord[]> {
+export async function getZoneRecords(apiKey: string, zoneID: string): Promise<CFRecord[]> {
     return (
         await handleResponseAndState<CFListRecordsResponse>(
             buildGetRequest(`/zones/${encodeURIComponent(zoneID)}/dns_records`, apiKey)
@@ -56,16 +56,16 @@ export async function getZoneRecordsInfo(apiKey: string, zoneID: string): Promis
     ).result;
 }
 
-export async function updateRecord(apiKey: string, zoneID: string, info: CFRecord, content: string): Promise<void> {
+export async function updateRecord(apiKey: string, zoneID: string, record: CFRecord, content: string): Promise<void> {
     await handleResponseAndState<CFResponse>(
         buildPostRequest(
-            `/zones/${encodeURIComponent(zoneID)}/dns_records/${encodeURIComponent(info.id)}`,
+            `/zones/${encodeURIComponent(zoneID)}/dns_records/${encodeURIComponent(record.id)}`,
             apiKey,
             "PATCH",
             {
-                type: "A",
-                name: info.name,
-                ttl: info.ttl,
+                type: record.type,
+                name: record.name,
+                ttl: record.ttl,
                 content,
                 comment: RECORD_COMMENT
             }

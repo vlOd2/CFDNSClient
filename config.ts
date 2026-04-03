@@ -6,6 +6,7 @@ export const RECORD_COMMENT = "Record managed automatically by CFDNSClient";
 
 export interface ConfigZone {
     name: string;
+    enableAAAA: boolean;
     records: string[];
 }
 
@@ -22,6 +23,7 @@ const ConfigZoneDescriptor: Descriptor<ConfigZone> = {
         }
         return v;
     },
+    enableAAAA: (v) => Boolean(v),
     records: arraySatisfiesPredicate((e) => String(e))
 };
 
@@ -63,10 +65,12 @@ export async function writeDefaultConfig() {
                 zones: [
                     {
                         name: "example.com",
+                        enableAAAA: true,
                         records: ["@", "www", "api"]
                     },
                     {
                         name: "example.net",
+                        enableAAAA: false,
                         records: ["@", "www"]
                     }
                 ]
@@ -77,20 +81,24 @@ export async function writeDefaultConfig() {
     );
 }
 
-export function mapConfigRecord(zone: ConfigZone, record: string, recordsInfo: CFRecord[]): CFRecord {
-    let info;
-    if (record == "@") {
-        info = recordsInfo.find((r) => r.name == zone.name);
+export function getNameRecords(zone: ConfigZone, name: string, recordsInfo: CFRecord[]): CFRecord[] {
+    let records: CFRecord[];
+    if (name == "@") {
+        records = recordsInfo.filter((r) => r.name == zone.name);
     } else {
-        info = recordsInfo.find((r) => r.name.startsWith(`${record}.`));
+        records = recordsInfo.filter((r) => r.name.startsWith(`${name}.`));
     }
 
-    if (!info) {
-        throw new Error("Could not find record info (does the record exist?)");
-    }
-    if (info.type != "A") {
-        throw new Error(`Unsupported record type: ${info.type} (only A records are supported)`);
+    if (!records || records.length == 0) {
+        throw new Error("Could not find any matching record (does the name exist?)");
     }
 
-    return info;
+    const illegalRecord = records.find((i) => i.type != "A" && i.type != "AAAA");
+    if (illegalRecord) {
+        throw new Error(
+            `${name} has an unsupported record type: ${illegalRecord.type} (only A and AAAA records are supported)`
+        );
+    }
+
+    return records;
 }
