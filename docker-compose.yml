@@ -2,8 +2,11 @@ services:
   cfdnsclient:
     build:
       context: .
+    networks:
+      - main
     volumes:
-      - cfdnsclient_config:/app
+      - ./config.json:/app/config.json
 
-volumes:
-  cfdnsclient_config:
+networks:
+  main:
+    enable_ipv6: true
