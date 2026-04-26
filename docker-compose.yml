@@ -2,6 +2,8 @@ services:
   cfdnsclient:
     build:
       context: .
+    restart: unless-stopped
+    container_name: cfdnsclient
     networks:
       - main
     volumes:
